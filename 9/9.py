@@ -18,9 +18,9 @@ def findadj(row, col):
         adjc += [col+1]
     adj = []
     for c in adjc:
-        adj += [[row, c]]
+        adj += [(row, c)]
     for r in adjr:
-        adj += [[r, col]]
+        adj += [(r, col)]
     return adj
 
 def findlows(points):
@@ -52,18 +52,22 @@ def findlowpoints(points):
                 if p >= points[a[0]][a[1]]:
                     low = False
             if low:
-                lowpoints += [[row,col]]
+                lowpoints += [(row,col)]
     return lowpoints
 
-def basinset(points, point, visited=None):
-    if visited is None:
-        visited = set() # not entirely sure why this is necessary... but it is!
-    visited.add((point[0], point[1]))
-    adj = set(tuple(i) for i in findadj(point[0], point[1])).difference(visited)
-    for a in adj:
-        if a not in visited and points[a[0]][a[1]] != 9:
-            visited.union(basinset(points, a, visited))
-    return visited
+def filteradj(adj, points):
+    return list(filter(lambda a: points[a[0]][a[1]] != 9, adj))
+
+def basinset(points, point):
+    frontier = [point]
+    reached = {point}
+    while len(frontier) > 0:
+        cur = frontier.pop()
+        for a in filteradj(findadj(cur[0], cur[1]), points):
+            if a not in reached:
+                frontier = [a] + frontier
+                reached.add(a)
+    return reached
 
 def product(list):
     res = 1
