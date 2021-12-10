@@ -1,6 +1,3 @@
-from types import NoneType
-
-
 points = [[int(p) for p in line.strip()] for line in open("input.txt")]
 # 100 rows by 100 columns
 viewmode = [[("▓" if i == "9" else i) for i in line] for line in open("input.txt")]
